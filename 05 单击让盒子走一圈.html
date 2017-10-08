@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #box {
+            width: 120px;
+            height: 120px;
+            background-color: pink;
+            position: absolute;
+            left: 120px;
+            top: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box"></div>
+    <input type="button" value="走一圈">
+
+</body>
+<script>
+    //让盒子向右移动到800px
+    //获取元素
+    //声明一个定时器
+    var timer = null;
+    var oBox = document.getElementById("box");
+    var aInp = document.getElementsByTagName("input")[0];
+
+    aInp.onclick = function () {
+        move(oBox,"top",800,12,function(){
+            move(oBox,"left",900,12,function(){
+                move(oBox,"top",100,12,function(){
+                    move(oBox,"left",100,12)
+                })
+            })
+        });
+    }
+    
+    //封装成一个函数
+    function move(obj,attr,target, speed,fn) {
+
+        //初始化,点击的时候清除掉之前的定时器
+        clearInterval(timer);
+        var dis =parseFloat(getStyle(obj,attr));
+        // console.log(dis);//验证getStyle获取的元素样式带单位
+        //添加一个定时器rijdf
+        //根据目标点和出发点的位置判断speed的正负
+        speed = dis > target ? -speed : speed;
+        timer = setInterval(function () {
+            dis += speed;
+            if (dis >= target && speed > 0) {
+                dis = target;
+            }
+            if (dis <= target && speed < 0) {
+                dis = target;
+            }
+            obj.style[attr] = dis + 'px';
+            if (dis == target) {
+                clearInterval(timer);
+                timer = null;
+                fn&&fn();
+            }
+        }, 20)
+
+    }
+    //获取样式的函数
+    function getStyle(obj,attr) {
+        if(obj.currentStyle) {
+				return obj.currentStyle[attr];
+			}else {
+				return getComputedStyle(obj)[attr];
+			}
+    }
+
+</script>
+
+</html>
